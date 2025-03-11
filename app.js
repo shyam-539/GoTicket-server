@@ -8,6 +8,7 @@ import compression from "compression";
 import { errors } from "celebrate";
 import { errorHandler } from "./utils/errorHandler.js";
 import logger from "./utils/logger.js";
+import userRoutes from "../server/routes/userRoutes.js";
 
 
 const app = express();
@@ -40,7 +41,7 @@ app.use((req, res, next) => {
 
 // Routes
 
-// app.use("/api/users", userRoutes);
+app.use("/api/users", userRoutes);
 
 // app.use("/api/admin", adminRoutes);
 
