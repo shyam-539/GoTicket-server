@@ -10,3 +10,7 @@
 {"level":"info","message":"New user registered: johndoe@example.com","service":"user-service","timestamp":"2025-03-11T14:58:55.836Z"}
 {"level":"info","message":"POST /api/users/login","service":"user-service","timestamp":"2025-03-11T14:59:28.265Z"}
 {"level":"info","message":"POST /api/users/login","service":"user-service","timestamp":"2025-03-11T15:03:09.658Z"}
+{"level":"info","message":"POST /api/users/login","service":"user-service","timestamp":"2025-03-11T15:03:25.639Z"}
+{"level":"info","message":"User logged in: johndoe@example.com","service":"user-service","timestamp":"2025-03-11T15:03:26.068Z"}
+{"level":"info","message":"POST /api/users/profile","service":"user-service","timestamp":"2025-03-11T15:16:11.037Z"}
+{"level":"info","message":"GET /api/users/profile","service":"user-service","timestamp":"2025-03-11T15:16:20.960Z"}

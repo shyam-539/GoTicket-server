@@ -1,6 +1,6 @@
 import express from "express";
 import { celebrate, Segments } from "celebrate";
-import authMiddleware from "../middlewares/authMiddleware.js";
+import { authenticateUser, authorizeRoles } from "../middlewares/authMiddleware.js"; // ✅ FIXED
 import validateSignup from "../middlewares/validateSignup.js";
 import rateLimit from "express-rate-limit";
 import upload from "../utils/multerConfig.js";
@@ -39,7 +39,7 @@ router.post("/signup", validateSignup, signup);
 router.post(
   "/login",
   loginLimiter,
-  celebrate({ [Segments.BODY]: loginSchema[Segments.BODY] }), // FIXED usage
+  celebrate({ [Segments.BODY]: loginSchema[Segments.BODY] }),
   login
 );
 
@@ -50,20 +50,20 @@ router.post("/refresh-token", (req, res, next) => {
   next();
 }, refreshToken);
 
-router.post("/logout", authMiddleware, logout);
+router.post("/logout", authenticateUser, logout); 
 
-router.get("/profile", authMiddleware, getUserProfile);
+router.get("/profile", authenticateUser, getUserProfile); 
 
 router.put(
   "/profile",
-  authMiddleware,
-  celebrate({ [Segments.BODY]: updateProfileSchema[Segments.BODY] }), // FIXED usage
+  authenticateUser, 
+  celebrate({ [Segments.BODY]: updateProfileSchema[Segments.BODY] }),
   updateUserProfile
 );
 
 router.post(
   "/upload-profile-pic",
-  authMiddleware,
+  authenticateUser, 
   (req, res, next) => {
     upload.single("profilePic")(req, res, (err) => {
       if (err) {
@@ -77,11 +77,11 @@ router.post(
 
 router.post(
   "/change-password",
-  authMiddleware,
-  celebrate({ [Segments.BODY]: changePasswordSchema[Segments.BODY] }), // FIXED usage
+  authenticateUser, 
+  celebrate({ [Segments.BODY]: changePasswordSchema[Segments.BODY] }),
   changePassword
 );
 
-router.delete("/account", authMiddleware, deleteAccount);
+router.delete("/account", authenticateUser, deleteAccount); 
 
 export default router;

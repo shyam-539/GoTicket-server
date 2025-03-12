@@ -1,74 +1,103 @@
 import mongoose from "mongoose";
+import { v4 as uuidv4 } from "uuid";
 
 const TheaterSchema = new mongoose.Schema(
   {
-    owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+    theaterId: {
+      type: String,
+      unique: true,
+      default: () => uuidv4(),
     },
     name: {
       type: String,
       required: [true, "Theater name is required"],
       trim: true,
+      minlength: [2, "Theater name must be at least 2 characters long"],
+      maxlength: [100, "Theater name cannot exceed 100 characters"],
     },
-    address: {
-      buildingNumber: { type: String, required: true },
-      street: { type: String, required: true },
-      city: { type: String, required: true },
-      state: { type: String, required: true },
-      country: { type: String, required: true },
-      postalCode: { type: String, required: true },
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "Theater must have an owner"],
     },
-    totalSeats: {
-      type: Number,
-      required: [true, "Total seats are required"],
-      min: 1,
-    },
-    contactEmail: {
-      type: String,
-      required: true,
-      match: [/^\S+@\S+\.\S+$/, "Please use a valid email address"],
-    },
-    contactPhone: {
-      type: String,
-      required: true,
-      match: [/^\d{10}$/, "Phone number must be 10 digits"],
-    },
-    shows: [
-      {
-        movie: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Movie",
+    location: {
+      address: {
+        type: String,
+        required: [true, "Address is required"],
+        trim: true,
+      },
+      city: {
+        type: String,
+        required: [true, "City is required"],
+        trim: true,
+      },
+      state: {
+        type: String,
+        required: [true, "State is required"],
+        trim: true,
+      },
+      pincode: {
+        type: String,
+        required: [true, "Pincode is required"],
+        trim: true,
+      },
+      coordinates: {
+        lat: {
+          type: Number,
+          default: null,
         },
-        showTime: {
-          type: Date,
-          required: true,
-          validate: {
-            validator: function (value) {
-              return value > new Date();
-            },
-            message: "Showtime must be in the future",
-          },
-        },
-        bookedSeats: {
-          type: [String], // Example: ["A1", "A2", "B3"]
-          default: [],
+        lng: {
+          type: Number,
+          default: null,
         },
       },
-    ],
+    },
+    contact: {
+      email: {
+        type: String,
+        required: [true, "Email is required"],
+        trim: true,
+      },
+      phone: {
+        type: String,
+        required: [true, "Phone number is required"],
+        trim: true,
+      },
+    },
+    status: {
+      type: String,
+      enum: ["active", "inactive", "under maintenance"],
+      default: "active",
+    },
+    amenities: {
+      type: [String],
+      default: [],
+    },
+    imageUrl: {
+      type: String,
+      default: "",
+    },
+    imageId: {
+      type: String,
+      default: "",
+    },
+    // Approval system
+    isApproved: {
+      type: Boolean,
+      default: false, // Needs admin approval before activation
+    },
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true }, // Enable virtual fields
-    toObject: { virtuals: true },
+    toJSON: {
+      transform: function (doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+      },
+    },
   }
 );
-
-// ✅ Auto-calculate `availableSeats`
-TheaterSchema.virtual("availableSeats").get(function () {
-  let bookedSeatsCount = this.shows.reduce((acc, show) => acc + show.bookedSeats.length, 0);
-  return this.totalSeats - bookedSeatsCount;
-});
 
 export default mongoose.model("Theater", TheaterSchema);

@@ -1,19 +1,43 @@
 import express from "express";
-import authMiddleware, { adminMiddleware } from "../middlewares/authMiddleware.js";
-import { getAllUsers, deleteUser, getAllTheaters, deleteTheater } from "../controllers/adminController.js";
+import { 
+  adminLogin,
+  getDashboardStats,
+  getAllTheaters,
+  updateTheaterStatus,
+  getAllMovies,
+  updateMovieStatus,
+  getAllUsers,
+  updateUserStatus,
+  updateUserRole,
+  getRevenueReports
+} from "../controllers/adminController.js";
+import { authenticateUser, authorizeRoles } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-// GET all users (Admins only)
-router.get("/users", authMiddleware, adminMiddleware, getAllUsers);
+// Admin login route
+router.post("/login", adminLogin);  // Add this route to handle admin login
 
-// DELETE a user (Admins only)
-router.delete("/users/:id", authMiddleware, adminMiddleware, deleteUser);
+// Apply authentication and admin role authorization to all routes
+router.use(authenticateUser, authorizeRoles("admin"));
 
-// GET all theaters (Admins only)
-router.get("/theaters", authMiddleware, adminMiddleware, getAllTheaters);
+// Dashboard statistics
+router.get("/dashboard", getDashboardStats);
 
-// DELETE a theater (Admins only)
-router.delete("/theaters/:id", authMiddleware, adminMiddleware, deleteTheater);
+// Theater management routes
+router.get("/theaters", getAllTheaters);
+router.patch("/theaters/:theaterId/status", updateTheaterStatus);
+
+// Movie management routes
+router.get("/movies", getAllMovies);
+router.patch("/movies/:movieId/status", updateMovieStatus);
+
+// User management routes
+router.get("/users", getAllUsers);
+router.patch("/users/:userId/status", updateUserStatus);
+router.patch("/users/:userId/role", updateUserRole);
+
+// Revenue reports (future scope)
+router.get("/revenue", getRevenueReports);
 
 export default router;

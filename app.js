@@ -8,19 +8,26 @@ import compression from "compression";
 import { errors } from "celebrate";
 import { errorHandler } from "./utils/errorHandler.js";
 import logger from "./utils/logger.js";
-import userRoutes from "../server/routes/userRoutes.js";
 
+// Importing Routes
+import userRoutes from "./routes/userRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import theaterRoutes from "./routes/theaterRoutes.js";
+import screenRoutes from "./routes/screenRoutes.js";
+import showRoutes from "./routes/showRoutes.js";
+import seatRoutes from "./routes/seatRoutes.js";
+import movieRoutes from "./routes/movieRoutes.js";
 
 const app = express();
 
 // Middleware
-app.use(helmet()); // Set security headers
-app.use(express.json({ limit: "10kb" })); // Body parser with size limit
+app.use(helmet());
+app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
-app.use(cookieParser()); // Parse cookies
-app.use(mongoSanitize()); // Prevent NoSQL injection
-app.use(xss()); // Prevent XSS attacks
-app.use(compression()); // Compress responses
+app.use(cookieParser());
+app.use(mongoSanitize());
+app.use(xss());
+app.use(compression());
 
 // CORS configuration
 app.use(
@@ -39,11 +46,14 @@ app.use((req, res, next) => {
   next();
 });
 
-// Routes
-
-app.use("/api/users", userRoutes);
-
-// app.use("/api/admin", adminRoutes);
+// Adding Routes
+app.use("/api/v1/auth", userRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/v1/theater", theaterRoutes);
+app.use("/api/v1/screen", screenRoutes);
+app.use("/api/v1/show", showRoutes);
+app.use("/api/v1/seat", seatRoutes);
+app.use("/api/v1/movie", movieRoutes);
 
 // Health check endpoint
 app.get("/health", (req, res) => {

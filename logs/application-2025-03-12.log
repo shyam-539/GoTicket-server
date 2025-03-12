@@ -1,0 +1,23 @@
+{"level":"info","message":"POST /api/health","service":"user-service","timestamp":"2025-03-12T10:00:11.335Z"}
+{"level":"info","message":"POST /health","service":"user-service","timestamp":"2025-03-12T10:01:28.408Z"}
+{"level":"info","message":"GET /health","service":"user-service","timestamp":"2025-03-12T10:01:35.401Z"}
+{"level":"info","message":"POST /api/auth/signup","service":"user-service","timestamp":"2025-03-12T10:23:49.085Z"}
+{"level":"info","message":"POST /api/user/signup","service":"user-service","timestamp":"2025-03-12T10:23:57.355Z"}
+{"level":"info","message":"POST /api/v1/auth/signup","service":"user-service","timestamp":"2025-03-12T10:24:57.027Z"}
+{"level":"info","message":"POST /api/v1/auth/signup","service":"user-service","timestamp":"2025-03-12T10:25:24.751Z"}
+{"level":"info","message":"POST /api/v1/auth/signup","service":"user-service","timestamp":"2025-03-12T10:25:30.668Z"}
+{"level":"info","message":"POST /api/v1/auth/signup","service":"user-service","timestamp":"2025-03-12T10:26:07.405Z"}
+{"level":"info","message":"POST /api/v1/auth/signup","service":"user-service","timestamp":"2025-03-12T10:26:57.440Z"}
+{"level":"info","message":"New user registered: admin@example.com","service":"user-service","timestamp":"2025-03-12T10:26:57.824Z"}
+{"level":"info","message":"POST /api/v1/auth/admin/login","service":"user-service","timestamp":"2025-03-12T10:27:32.416Z"}
+{"level":"info","message":"POST /api/v1/auth/admin/login","service":"user-service","timestamp":"2025-03-12T10:29:42.629Z"}
+{"level":"info","message":"POST /api/v1/auth/admin/login","service":"user-service","timestamp":"2025-03-12T10:29:45.865Z"}
+{"level":"info","message":"POST /api/v1/auth/admin/login","service":"user-service","timestamp":"2025-03-12T10:33:32.682Z"}
+{"level":"info","message":"POST /api/v1/auth/admin/login","service":"user-service","timestamp":"2025-03-12T10:33:35.529Z"}
+{"level":"info","message":"POST /api/v1/auth/admin/login","service":"user-service","timestamp":"2025-03-12T10:33:36.429Z"}
+{"level":"info","message":"POST /api/v1/auth/admin/login","service":"user-service","timestamp":"2025-03-12T10:34:54.913Z"}
+{"level":"info","message":"POST /api/v1/auth/admin/login","service":"user-service","timestamp":"2025-03-12T10:34:56.858Z"}
+{"level":"info","message":"POST /api/admin/login","service":"user-service","timestamp":"2025-03-12T10:35:57.870Z"}
+{"level":"info","message":"POST /api/admin/login","service":"user-service","timestamp":"2025-03-12T10:36:43.964Z"}
+{"level":"info","message":"POST /api/admin/login","service":"user-service","timestamp":"2025-03-12T10:37:01.236Z"}
+{"level":"info","message":"POST /api/admin/login","service":"user-service","timestamp":"2025-03-12T10:37:41.592Z"}

@@ -3,11 +3,11 @@ import User from "../models/User.js";
 import { ApiError } from "../utils/errorHandler.js";
 
 // Authentication Middleware: Ensures user is logged in
-const authMiddleware = async (req, res, next) => {
+export const authenticateUser = async (req, res, next) => {
   try {
     const authHeader = req.header("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      throw new ApiError("No token provided, authorization denied", 401);
+    if (!authHeader?.startsWith("Bearer ")) {
+      return next(new ApiError("No token provided, authorization denied", 401));
     }
 
     const token = authHeader.split(" ")[1];
@@ -15,32 +15,30 @@ const authMiddleware = async (req, res, next) => {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // Fetch user details with role only (reduces DB load)
-      const user = await User.findOne({ userId: decoded.userId }).select("role passwordChangedAt");
+      // Fetch user with only required fields (avoiding unnecessary DB load)
+      const user = await User.findById(decoded.userId).select("role passwordChangedAt");
       if (!user) {
-        throw new ApiError("User no longer exists", 401);
+        return next(new ApiError("User no longer exists", 401));
       }
 
       // Check if password was changed after token was issued
-      if (user.passwordChangedAt && user.passwordChangedAt instanceof Date) {
-        const changedTimestamp = parseInt(user.passwordChangedAt.getTime() / 1000, 10);
+      if (user.passwordChangedAt instanceof Date) {
+        const changedTimestamp = Math.floor(user.passwordChangedAt.getTime() / 1000);
         if (decoded.iat < changedTimestamp) {
-          throw new ApiError("User recently changed password, please login again", 401);
+          return next(new ApiError("User recently changed password, please login again", 401));
         }
       }
 
-      req.user = { userId: decoded.userId, role: user.role }; // Attach minimal user data
+      req.user = { userId: user._id, role: user.role }; // Attach minimal user data
       next();
     } catch (error) {
-      console.error("Auth Middleware Error:", error);
-
       if (error instanceof jwt.TokenExpiredError) {
-        throw new ApiError("Token expired", 401);
+        return next(new ApiError("Token expired", 401));
       }
       if (error instanceof jwt.JsonWebTokenError) {
-        throw new ApiError("Invalid token", 401);
+        return next(new ApiError("Invalid token", 401));
       }
-      throw error;
+      next(error);
     }
   } catch (error) {
     next(error);
@@ -48,17 +46,10 @@ const authMiddleware = async (req, res, next) => {
 };
 
 // Role-Based Access Middleware 
-export const roleMiddleware = (...allowedRoles) => {
-  return async (req, res, next) => {
-    try {
-      if (!req.user || !allowedRoles.includes(req.user.role)) {
-        throw new ApiError("Access denied", 403);
-      }
-      next();
-    } catch (error) {
-      next(error);
-    }
-  };
+export const authorizeRoles = (...allowedRoles) => (req, res, next) => {
+  if (!req.user || !allowedRoles.includes(req.user.role)) {
+    return next(new ApiError("Access denied", 403));
+  }
+  next();
 };
 
-export default authMiddleware;
