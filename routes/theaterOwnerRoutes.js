@@ -13,7 +13,7 @@ import {
   ownerSignup,
 } from "../controllers/theaterOwnerController.js";
 
-import { authorizeTheaterOwner } from "../middlewares/theaterOwnerAuthMiddleware.js";
+import { authorizeTheaterOwner } from "../middlewares/theaterOwnerMiddleware.js";
 import {
   addMovie,
   deleteMovie,
@@ -24,7 +24,7 @@ import {
 import {
   authorizedTheaterOwnerOrAdmin,
   verifyMovieAccess,
-} from "../middlewares/authorizeRoles.js";
+} from "../middlewares/roleAuthMiddleware.js";
 
 import {
   addShow,

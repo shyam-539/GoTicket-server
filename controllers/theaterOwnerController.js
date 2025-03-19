@@ -5,9 +5,9 @@ import { generateToken } from "../utils/generateToken.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import sendEmail from "../utils/mailSender.js";
-import { Movie } from "../models/Movie.js";
-import { Show } from "../models/Shows.js";
-import { Booking } from "../models/Booking.js";
+import { Movie } from "../models/Movies.js";
+import { Show } from "../models/Show.js";
+import { Booking } from "../models/Bookings.js";
 
 // Signup
 export const ownerSignup = async (req, res) => {
@@ -136,41 +136,51 @@ export const ownerSignup = async (req, res) => {
 // Login
 export const ownerLogin = async (req, res) => {
   try {
-    //Get data from body
+    // Get data from body
     const { email, password } = req.body;
-    //Check User exist
+
+    // Check if the user exists
     const userExist = await TheaterOwner.findOne({ email });
     if (!userExist) {
-      res.status(400).json({ message: "User not exist" });
+      return res.status(400).json({ message: "User does not exist" });
     }
-    //password check
+
+    // Check password
     const passwordMatch = await bcrypt.compare(password, userExist.password);
     if (!passwordMatch) {
-      res.status(400).json({ message: "Invalid Credentials" });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
-    //Check user profile is Verified
+
+    // Check if the user profile is verified
     if (!userExist.isVerified) {
-      return res.status(400).json({ message: "User account is not Verifed" });
+      return res.status(400).json({ message: "User account is not verified" });
     }
-    //Check user profile is Active
-    if(!userExist.isActive){
-      return res.status(400).json({ message: "User account is not Active" });
+
+    // Check if the user profile is active
+    if (!userExist.isActive) {
+      return res.status(400).json({ message: "User account is not active" });
     }
-    //Generate Token
+
+    // Generate Token
     const token = generateToken(userExist._id, userExist.role);
-    res.cookie("token", token, { httpOnly: true, secure: true });
-    //Send data to frontend without password
-    const ownerWithoutPassword = userExist.toObject();
-    delete ownerWithoutPassword.password;
-    res
-      .status(200)
-      .json({ data: ownerWithoutPassword, message: "Owner Signup Success" });
+
+    // Set cookie securely based on environment
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Only secure in production
+      sameSite: "strict",
+    });
+
+    // Send data to frontend without password
+    const { password: _, ...ownerData } = userExist.toObject();
+    res.status(200).json({ data: ownerData, message: "Owner login successful" });
+
   } catch (error) {
-    res
-      .status(error.status || 500)
-      .json({ message: error.message || "Internal server error" });
+    console.error("Login Error:", error); // Log error for debugging
+    res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 // Logout
 export const ownerLogout = async (req, res) => {

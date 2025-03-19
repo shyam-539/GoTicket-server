@@ -15,7 +15,7 @@ import { authorizedAdmin } from "../middlewares/adminAuthMiddleware.js";
 import {
   authorizedTheaterOwnerOrAdmin,
   verifyMovieAccess,
-} from "../middlewares/authorizeRoles.js";
+} from "../middlewares/roleAuthMiddleware.js";
 
 import {
   addMovie,

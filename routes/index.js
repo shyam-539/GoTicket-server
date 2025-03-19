@@ -2,10 +2,10 @@ import express from 'express'
 import userRouter from './userRoutes.js'
 import theaterOwnerRouter from './theaterOwnerRoutes.js'
 import adminRouter from './adminRoutes.js'
-import paymentRouter from './paymentRoute.js'
+import paymentRouter from './paymentRoutes.js'
 import authRouter from "./authRoutes.js";
 import { getAllMovies, getMovieById } from '../controllers/movieController.js'
-import { verifyMovieAccess } from '../middlewares/authorizeRoles.js'
+import { verifyMovieAccess } from '../middlewares/roleAuthMiddleware.js'
 
  // Creating an instance of an Express router
 const router = express.Router()

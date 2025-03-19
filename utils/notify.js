@@ -1,4 +1,4 @@
-import { Notification } from "../models/notificationModel.js";
+import { Notification } from "../models/Notification.js";
 
 export const notifyAdmin = async (newTheaterOwner) => {
   try {

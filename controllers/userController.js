@@ -3,7 +3,7 @@ import crypto from "crypto";
 import bcrypt from "bcrypt";
 import { generateToken } from "../utils/token.js";
 import generateProfilePic from "../utils/profilePicGenerator.js";
-import sendEmail from "../utils/sendEmail.js";
+import sendEmail from "../utils/mailSender.js";
 
 // User signup
 export const userSignup = async (req, res) => {
@@ -38,7 +38,9 @@ export const userSignup = async (req, res) => {
     const userWithoutPassword = newUser.toObject();
     delete userWithoutPassword.password;
 
-    res.status(201).json({ data: userWithoutPassword, message: "Signup successful" });
+    res
+      .status(201)
+      .json({ data: userWithoutPassword, message: "Signup successful" });
   } catch (error) {
     res.status(500).json({ message: error.message || "Internal Server Error" });
   }
@@ -73,7 +75,9 @@ export const userLogin = async (req, res) => {
     const userWithoutPassword = userExist.toObject();
     delete userWithoutPassword.password;
 
-    res.status(302).json({ data: userWithoutPassword, message: "Login successful" });
+    res
+      .status(302)
+      .json({ data: userWithoutPassword, message: "Login successful" });
   } catch (error) {
     res.status(500).json({ message: error.message || "Internal Server Error" });
   }
@@ -92,7 +96,9 @@ export const userLogout = async (req, res) => {
 // Fetch user profile
 export const userProfile = async (req, res) => {
   try {
-    res.status(200).json({ data: req.user, message: "Profile fetched successfully" });
+    res
+      .status(200)
+      .json({ data: req.user, message: "Profile fetched successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message || "Internal Server Error" });
   }
@@ -114,7 +120,9 @@ export const profileEdit = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ data: updatedUser, message: "Profile updated successfully" });
+    res
+      .status(200)
+      .json({ data: updatedUser, message: "Profile updated successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message || "Internal Server Error" });
   }
@@ -185,5 +193,16 @@ export const forgotPassword = async (req, res) => {
     res.status(200).json({ message: "New password sent to your email" });
   } catch (error) {
     res.status(500).json({ message: error.message || "Internal Server Error" });
+  }
+};
+
+// User available
+export const userAvailable = async (req, res) => {
+  try {
+    res.status(200).json({ message: "User is Authorized" });
+  } catch (error) {
+    res
+      .status(error.statuscode || 500)
+      .json({ message: error.message || "Internal Server Error" });
   }
 };
