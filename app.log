@@ -1,0 +1,4 @@
+{"level":"info","message":"::1 - - [19/Mar/2025:10:14:21 +0000] \"GET /health HTTP/1.1\" 404 145 \"-\" \"PostmanRuntime/7.43.2\""}
+{"level":"info","message":"::1 - - [19/Mar/2025:10:14:24 +0000] \"POST /health HTTP/1.1\" 404 146 \"-\" \"PostmanRuntime/7.43.2\""}
+{"level":"info","message":"::1 - - [19/Mar/2025:10:14:28 +0000] \"POST / HTTP/1.1\" 404 140 \"-\" \"PostmanRuntime/7.43.2\""}
+{"level":"info","message":"::1 - - [19/Mar/2025:10:14:31 +0000] \"GET / HTTP/1.1\" 200 18 \"-\" \"PostmanRuntime/7.43.2\""}
