@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { TheaterOwner } from "../models/theaterModel.js";
+import { TheaterOwner } from "../models/Theater.js";
 
 export const authorizeTheaterOwner = async (req, res, next) => {
   try {
